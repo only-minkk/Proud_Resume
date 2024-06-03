@@ -9,18 +9,16 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
-
-  const newUser = new User({
-    name,
-    email,
-    password,
-  });
-
+export const updateUser = async (req, res) => {
   try {
-    const savedUser = await newUser.save();
-    res.status(201).json(savedUser);
+    const { email, newName } = req.body;
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email: email },
+      { name: newName }
+    );
+    console.log(updatedUser);
+    res.status(200).json(updatedUser);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
