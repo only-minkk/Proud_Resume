@@ -45,12 +45,20 @@ export const login = async (req, res) => {
     }
 
     const secretKey = process.env.JWT_SECRET_KEY;
-
-    const token = jwt.sign({ id: user._id }, secretKey, {
+    const accessToken = jwt.sign({ id: user._id }, secretKey, {
       expiresIn: "30m",
     });
 
-    res.status(200).json(token);
+    const refreshSecretKey = process.env.REFRESH_JWT_SECRET_KEY;
+    const refreshToken = jwt.sign({ id: user._id }, refreshSecretKey, {
+      expiresIn: "60m",
+    });
+
+    res.header({
+      AccessToken: accessToken,
+      RefreshToken: refreshToken,
+    });
+    res.status(200).send("로그인 성공");
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
