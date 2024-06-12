@@ -22,17 +22,7 @@ const loginRequired = (req, res, next) => {
     req.userId = jwtDecoded.id;
     next();
   } catch (error) {
-    throw new Error(error);
-    // throw new Error(
-    //   `name: ${error.name},
-    //   message: ${error.message},
-    //   expiredAt: ${error.expiredAt}`
-    // );
-    // throw new error(`{
-    //   name: error.name,
-    //   message: error.message,
-    //   expiredAt: error.expiredAt,
-    // }`);
+    res.status(401).send(error);
   }
 };
 
