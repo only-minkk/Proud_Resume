@@ -4,7 +4,8 @@ import { getUsers, updateUser } from "../controllers/userController.js";
 
 const userRouter = Router();
 
-userRouter.get("/users", getUsers);
-userRouter.put("/users/:id", authorizeUser, updateUser);
+userRouter.get("/", getUsers);
+userRouter.put("/:id", authorizeUser, updateUser);
+//todo delete 추가
 
 export default userRouter;

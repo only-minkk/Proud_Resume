@@ -10,26 +10,15 @@ import {
 
 const feedbackRouter = Router();
 
-feedbackRouter.post(
-  "/users/resumes/:resumeId/feedbacks/:id",
-  authorizeUser,
-  createFeedback
-);
-feedbackRouter.get(
-  "/users/resumes/feedbacks/:id",
-  authorizeUser,
-  usersFeedbacks
-);
-feedbackRouter.get("/users/resumes/:resumeId/feedbacks", getFeedbacks);
-feedbackRouter.put(
-  "/users/resumes/:resumeId/:id/feedbacks/:feedbackId",
-  authorizeUser,
-  updateFeedback
-);
-feedbackRouter.delete(
-  "/users/resumes/:resumeId/:id/feedbacks/:feedbackId",
-  authorizeUser,
-  deleteFeedback
-);
+// 특정 이력서에 대한 피드백 생성
+feedbackRouter.post("/:resumeId", authorizeUser, createFeedback);
+// 특정 이력서의 모든 피드백 조회
+feedbackRouter.get("/:resumeId", getFeedbacks);
+// 특정 이력서의 특정 피드백 조회
+feedbackRouter.get("/:resumeId/:feedbackId", authorizeUser, usersFeedbacks);
+// 특정 이력서의 특정 피드백 업데이트
+feedbackRouter.put("/:resumeId/:feedbackId", authorizeUser, updateFeedback);
+// 특정 이력서의 특정 피드백 삭제
+feedbackRouter.delete("/:resumeId/:feedbackId", authorizeUser, deleteFeedback);
 
 export default feedbackRouter;

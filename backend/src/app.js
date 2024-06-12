@@ -1,4 +1,6 @@
 import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 import authRouter from "./api/routes/authRoutes.js";
 import loginRequired from "../middleware/loginRequired.js";
 import userRouter from "./api/routes/userRoutes.js";
@@ -9,10 +11,9 @@ const app = express();
 
 app.use(express.json());
 
-app.use(authRouter);
-app.use(loginRequired);
-app.use(userRouter);
-app.use(resumeRouter);
-app.use(feedbackRouter);
+app.use("/auth", authRouter);
+app.use("/users", loginRequired, userRouter);
+app.use("/resumes", loginRequired, resumeRouter);
+app.use("/feedbacks", loginRequired, feedbackRouter);
 
 export default app;
