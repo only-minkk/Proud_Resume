@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proud Resumes</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <script>
+      // 페이지의 모든 DOM 요소가 로드된 후 실행되도록 이벤트 리스너 추가.
+      document.addEventListener("DOMContentLoaded", function () {
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("refreshToken");
+        console.log(accessToken);
+
+        if (accessToken && refreshToken) {
+          const navList = document.getElementById("nav-list");
+          navList.innerHTML = `<li><a href="/users">Profile</a></li>`;
+        }
+      });
+    </script>
+    <header>
+      <h1>PR | Proud Resumes</h1>
+      <nav>
+        <ul id="nav-list">
+          <li><a href="/login">Login / Register</a></li>
+        </ul>
+      </nav>
+    </header>
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <section id="section1">Section 1</section>
+        <section id="section2">Section 2</section>
+        <section id="section3">Section 3</section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+/* body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+main {
+  flex-grow: 1;
+  background: linear-gradient(to bottom, #007bff 0%, #fff 100%);
+}
+
+section {
+  padding: 20px;
+  margin: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* 폼의 너비 조정 */ /*
+  margin: auto; /* 폼을 페이지 중앙에 위치시킴 */ /*
+}
+
+label,
+input,
+button {
+  margin-bottom: 10px; /* 요소들 사이의 간격 조정 */ /*
+} */
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; /* 폰트 변경 */
+  /* background: #f4f4f9; 백그라운드 색상 변경 */
+  background: linear-gradient(to bottom, #61dafb 0%, #ffffff 100%);
+  color: #333; /* 기본 텍스트 색상 변경 */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0 auto; /* 가운데 정렬을 위해 자동 마진 추가 */
+  max-width: 1200px; /* 컨테이너 최대 너비 설정 */
+}
+
+header {
+  background-color: #20232a; /* 배경색 변경 */
+  color: #61dafb; /* 로고와 메뉴 텍스트 색상 변경 */
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; /* 마진 제거 */
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 8px 16px;
+  background-color: #61dafb; /* 배경색 변경 */
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.3s; /* 변환 효과 추가 */
+}
+
+nav ul li a:hover {
+  background-color: #ffffff; /* 호버 시 색상 변경 */
+  color: #61dafb;
+  transform: scale(1.05); /* 호버 시 약간 확대 */
+  font-size: 110%; /* 호버 시 글자 크기 10% 증가 */
+}
+
+main {
+  flex-grow: 1;
+  padding: 20px; /* 패딩 추가 */
+  background: linear-gradient(
+    to bottom,
+    #61dafb 0%,
+    #ffffff 100%
+  ); /* 그라데이션 색상 조정 */
+}
+
+section {
+  padding: 20px;
+  margin: 10px;
+  background-color: #ffffff; /* 배경색 흰색으로 변경 */
+  border-radius: 8px; /* 라운드 효과 증가 */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* 그림자 효과 증가 */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: 20px auto; /* 폼 마진 조정 */
+}
+
+label,
+input,
+button {
+  margin-bottom: 12px; /* 간격 조정 */
+}
