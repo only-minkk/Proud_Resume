@@ -5,11 +5,12 @@ import jwt from "jsonwebtoken";
 export const createUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    console.log(req.body);
 
     const checkEmailExists = await User.exists({ email: email });
     if (checkEmailExists) {
-      console.log("이미 존재하는 이메일");
-      throw new error("이미 존재하는 이메일");
+      console.log("이미 존재하는 이메일입니다.");
+      throw new Error("이미 존재하는 이메일입니다.");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,25 +24,26 @@ export const createUser = async (req, res) => {
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
 export const login = async (req, res) => {
   try {
+    console.log(req.body);
     const { email, password } = req.body;
 
     const user = await User.findOne({ email: email });
     if (!user) {
-      console.log("존재하지 않는 유저");
-      throw new error("존재하지 않는 유저");
+      console.log("이메일을 다시 확인하여 주십시오.");
+      throw new Error("이메일을 다시 확인하여 주십시오.");
     }
 
     const correctPassword = user.password;
     const comparePassword = await bcrypt.compare(password, correctPassword);
     if (!comparePassword) {
-      console.log("비밀번호가 틀렸습니다.");
-      throw new error("비밀번호가 틀렸습니다.");
+      console.log("비밀번호를 다시 확인하여 주십시오.");
+      throw new Error("비밀번호를 다시 확인하여 주십시오.");
     }
 
     const secretKey = process.env.JWT_SECRET_KEY;
@@ -57,9 +59,10 @@ export const login = async (req, res) => {
     res.header({
       AccessToken: accessToken,
       RefreshToken: refreshToken,
+      userId: user._id,
     });
-    res.status(200).send("로그인 성공");
+    res.status(200).send({ success: true, message: "로그인 성공" });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
