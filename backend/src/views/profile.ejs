@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proud Resumes</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <style>
+      #logout {
+        cursor: pointer; /* 손가락 모양 커서 적용 */
+      }
+      .button {
+        cursor: pointer; /* 손가락 모양 커서 적용 */
+      }
+      .button:hover {
+        transition: 0.3s;
+        border: 6px solid #ffffff;
+        font-weight: bolder;
+        background-color: #61dafb; /* 호버 시 색상 변경 */
+        color: #ffffff;
+        transform: scale(1.05); /* 호버 시 약간 확대 */
+        font-size: 110%; /* 호버 시 글자 크기 10% 증가 */
+      }
+      .contents {
+        color: #ffffff;
+        font-weight: bolder;
+        width: calc(100% - 100px); /* 기존 폭에서 40px 줄임 */
+        align-content: center;
+        margin: 20px auto; /* 가운데 정렬을 위한 마진 */
+        padding: 10px; /* 패딩 추가 */
+        background-color: #61dafb;
+        border: 4px solid #ffffff; /* 테두리 추가 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+      }
+      /* label {
+        display: block;
+      } */
+      #buttonDiv {
+        align-content: center;
+        margin: 20px auto; /* 가운데 정렬을 위한 마진 */
+        text-align: center;
+      }
+      button {
+        border: 2px solid #ffffff;
+      }
+    </style>
+    <script>
+      // 취소 버튼 함수
+      function cancelButton(event) {
+        event.preventDefault();
+        const thisSection = event.target.closest("section");
+
+        const siblingSectionButtons =
+          thisSection.previousElementSibling.querySelector("#buttonDiv");
+
+        if (siblingSectionButtons) {
+          siblingSectionButtons.style.display = "block";
+        }
+
+        // siblingSectionButtons.forEach((button) => {
+        //   button.style.display = "block";
+        // });
+
+        if (thisSection) {
+          thisSection.remove();
+        }
+      }
+
+      //개인정보 수정 제출 이벤트 리스너
+      async function updateProfile(event) {
+        event.preventDefault();
+
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+          document.getElementById("confirmPassword").value;
+        if (password !== confirmPassword) {
+          alert("새롭게 입력하신 비밀번호를 다시 확인하여 주십시오.");
+          return;
+        }
+        const form = document.querySelector("#updateForm");
+
+        const formData = new FormData(form);
+
+        const formDataObject = {};
+
+        for (const [key, value] of formData.entries()) {
+          formDataObject[key] = value;
+        }
+
+        if (formDataObject.confirmPassword) {
+          delete formDataObject.confirmPassword;
+        }
+        console.log(formDataObject);
+        console.log(localStorage.userId);
+
+        try {
+          const response = await fetch(`/users/${localStorage.userId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.accessToken}`,
+            },
+            body: JSON.stringify(formDataObject),
+          });
+          // .then((response) => {
+          //   return response.json().then((data) => ({
+          //     data,
+          //   }));
+          // })
+          // .then(({ data })=> {
+          //   if (data.success) {
+          //     alert("업데이트 성공");
+          //   } else {
+          //     throw new Error(result.message);
+          //   }
+          // });
+
+          const result = await response.json();
+          console.log(result.success === false);
+          if (result.success) {
+            alert("업데이트 성공");
+          } else {
+            throw new Error(result.message);
+          }
+
+          window.location.href = "/users";
+        } catch (error) {
+          alert(`Error: ${error.message}`);
+        }
+      }
+
+      // 개인정보 수정 버튼 클릭 함수
+      function createUpdateForm(event) {
+        event.preventDefault();
+
+        const userInfo = document.getElementById("getUsersContents");
+        const userEmail = userInfo
+          // .querySelector("p:nth-of-type(1)")
+          .querySelector("#userEmail")
+          .textContent.split(": ")[1];
+        const userName = userInfo
+          // .querySelector("p:nth-of-type(2)")
+          .querySelector("#userName")
+          .textContent.split(": ")[1];
+
+        const updateButton = document.getElementById("updateButton");
+        const toUpdateSection = document.createElement("section");
+        toUpdateSection.className = "contents";
+        toUpdateSection.id = "toUpdateSection";
+        toUpdateSection.innerHTML = `
+            <form id="updateForm">
+              <label for="email">이메일: ${userEmail}</label>
+
+              <label for="name">이름</label>
+              <input type="text" id="name" name="name" value="${userName}" autocomplete="name"/>
+
+              <label for="currentPassword">현재 비밀번호</label>
+              <input type="password" id="currentPassword" name="currentPassword" autocomplete="current-password"/>
+
+              <label for="password">새 비밀번호</label>
+              <input type="password" id="password" name="password" autocomplete="new-password"/>
+
+              <label for="confirmPassword">새 비밀번호 확인</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password"/>
+
+              <div id="buttonDiv">
+                <button type="submit" onclick="updateProfile(event)">확인</button>
+                <button type="button" onclick="cancelButton(event)">취소</button>
+              </div>
+            </form>`;
+        document
+          .getElementById("getUsersContents")
+          .insertAdjacentElement("afterend", toUpdateSection);
+
+        //querySelectorAll은 NodeList를 반환하므로 forEach 메서드를 사용하여 각 버튼에 접근해야한다.
+        // event.target.parentNode.querySelectorAll("button").style.display = "none";
+
+        const buttons =
+          event.target.parentNode.parentNode.querySelector("#buttonDiv");
+
+        if (buttons) {
+          buttons.style.display = "none";
+        }
+
+        // buttons.forEach((button) => [(button.style.display = "none")]);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+          alert("로그인해주십시오");
+          window.location = "/";
+        }
+
+        // 로그아웃 버튼
+        const logoutButton = document.getElementById("logout");
+        // 로그아웃 이벤트리스너
+        logoutButton.addEventListener("click", function (event) {
+          event.preventDefault(); // 기본 이벤트 방지.
+          localStorage.clear(); // 로컬 스토리지의 모든 데이터를 삭제
+          alert("로그아웃하였습니다.");
+
+          // fetch("/logout", {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          // });
+
+          window.location = "/";
+          return;
+        });
+
+        // 개인정보 섹션에 이벤트 리스너 추가
+        document
+          .getElementById("getUsers")
+          .addEventListener("click", function () {
+            const userId = localStorage.getItem("userId");
+
+            if (!userId) {
+              localStorage.clear();
+              alert("방문시간이 초과되어 다시 로그인을 해주시기 바랍니다.");
+              window.location = "/";
+            }
+
+            const getUsersContents =
+              document.getElementById("getUsersContents");
+            const toUpdateSection = document.getElementById("toUpdateSection");
+            if (getUsersContents) {
+              if (getUsersContents.style.display === "none") {
+                getUsersContents.style.display = "block";
+                if (toUpdateSection) {
+                  toUpdateSection.style.display = "block";
+                }
+              } else {
+                getUsersContents.style.display = "none";
+                if (toUpdateSection) {
+                  toUpdateSection.style.display = "none";
+                }
+                return;
+              }
+            } else {
+              fetch(`users/${userId}`, {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data[0].name && data[0].email) {
+                    const userInfo = document.createElement("section");
+                    userInfo.className = "contents";
+                    userInfo.id = "getUsersContents";
+                    userInfo.innerHTML = `
+                    <p id="userEmail">이메일: ${data[0].email}</p>
+                    <p id="userName">이름: ${data[0].name}</p>
+                    <div id="buttonDiv">
+                      <button id ="updateButton" type="button" onclick="createUpdateForm(event)">수정</button>
+                      <button type="button" onclick="cancelButton(event)">취소</button>
+                    <div>
+                    `;
+                    document
+                      .getElementById("getUsers")
+                      .insertAdjacentElement("afterend", userInfo);
+                  } else {
+                    alert("개인 정보를 불러오는 데 실패했습니다.");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  alert("서버와의 연결에 실패했습니다.");
+                });
+            }
+          });
+        //개인정보 수정 제출 이벤트 리스너
+        const form = document.querySelector("#updateForm");
+        if (form) {
+          form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const password = document.getElementById("password").value;
+            const confirmPassword =
+              document.getElementById("confirmPassword").value;
+            if (password !== confirmPassword) {
+              alert("비밀번호를 다시 확인하여 주십시오.");
+              return;
+            }
+
+            const formData = new FormData(form);
+
+            const formDataObject = {};
+
+            for (const [key, value] of formData.entries()) {
+              formDataObject[key] = value;
+            }
+
+            if (formDataObject.confirmPassword) {
+              formDataObject.confirmPassword.remove();
+            }
+            console.log(formDataObject);
+            console.log(localStorage.userId);
+
+            try {
+              const response = await fetch(`/users/${localStorage.userId}`, {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify(formDataObject),
+              });
+              const result = await response.json();
+
+              if (!result.success) {
+                throw new Error(result.message);
+              }
+
+              alert("업데이트 성공");
+              window.location.href = "/users";
+            } catch (error) {
+              alert(`Error: ${error.message}`);
+            }
+          });
+        }
+      });
+    </script>
+    <header>
+      <h1>PR | Proud Resumes</h1>
+      <nav>
+        <ul id="nav-list">
+          <li><a href="/">home</a></li>
+          <li><a id="logout">logout</a></li>
+        </ul>
+      </nav>
+    </header>
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <nav>
+          <ul>
+            <section class="button" id="createResume">이력서 생성</section>
+            <section class="button" id="getResume">이력서 목록</section>
+            <section class="button" id="getUsers">개인정보</section>
+          </ul>
+        </nav>
+      </main>
+    </div>
+  </body>
+</html>

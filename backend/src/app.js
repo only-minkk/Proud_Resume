@@ -30,6 +30,10 @@ app.get("/register", (req, res) => {
   res.render("register"); // 'register.ejs' 를 렌더링
 });
 
+app.get("/users", (req, res) => {
+  res.render("profile"); // 'profile.ejs'를 렌더링
+});
+
 app.use("/auth", authRouter);
 app.use("/users", loginRequired, userRouter);
 app.use("/resumes", loginRequired, resumeRouter);
