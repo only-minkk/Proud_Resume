@@ -1,0 +1,165 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <title>Login Page</title>
+  </head>
+  <body>
+    <header>
+      헤더 내용
+    </header>
+
+    <main>
+      <section id="login">
+        <form action="/auth/login" method="POST">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" required />
+
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+
+          <button type="submit">Login</button>
+        </form>
+        <form action="/auth/register" method="GET">
+          <button type="submit">Sign Up</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      푸터 내용
+    </footer>
+  </body>
+</html> -->
+<!-- 
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proud Resumes</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>PR | Proud Resumes</h1>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <section id="login">
+          <form action="/auth/login" method="POST">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required />
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+
+            <button type="submit">Login</button>
+          </form>
+          <a href="/register" class="button">Sign Up</a>
+        </section>
+      </main>
+    </div>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proud Resumes</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <script>
+      function handleLogin(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const formDataObject = {};
+
+        for (const [key, value] of formData.entries()) {
+          formDataObject[key] = value;
+        }
+
+        fetch("/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formDataObject),
+        })
+          .then((response) => {
+            // 토큰을 먼저 헤더에서 읽어옵니다.
+            const accessToken = response.headers.get("AccessToken");
+            const refreshToken = response.headers.get("RefreshToken");
+            const userId = response.headers.get("Userid");
+            // 응답 본문을 JSON으로 파싱하면서 토큰도 함께 반환합니다.
+            return response.json().then((data) => ({
+              data,
+              accessToken,
+              refreshToken,
+              userId,
+            }));
+          })
+          .then(({ data, accessToken, refreshToken, userId }) => {
+            if (data.success) {
+              localStorage.setItem("accessToken", accessToken);
+              localStorage.setItem("refreshToken", refreshToken);
+              localStorage.setItem("userId", userId);
+              alert(data.message); // "로그인 성공" 메시지를 보여줌
+              window.location = "/"; // 성공시 홈페이지로 리다이렉트
+            } else {
+              throw new Error(data.message); // 실패시 에러를 던짐
+            }
+          })
+          .catch((error) => {
+            alert("로그인 실패: " + error.message); // 실패시 사용자에게 에러 메시지를 보여줌
+          });
+      }
+    </script>
+    <header>
+      <h1>PR | Proud Resumes</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <section id="login">
+          <form onsubmit="handleLogin(event)">
+            <label for="email">Email:</label>
+            <input
+              type="text"
+              id="email"
+              name="email"
+              autocomplete="email"
+              required
+            />
+
+            <label for="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              autocomplete="current-password"
+              required
+            />
+
+            <button type="submit">Login</button>
+          </form>
+          <a href="/register" class="button">Sign Up</a>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
