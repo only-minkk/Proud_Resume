@@ -5,40 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Proud Resumes</title>
     <link rel="stylesheet" href="/styles/main.css" />
-    <script>
-      // 페이지의 모든 DOM 요소가 로드된 후 실행되도록 이벤트 리스너 추가.
-      document.addEventListener("DOMContentLoaded", function () {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-
-        if (accessToken && refreshToken) {
-          fetch("/token", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-            .then((response) => {
-              return response.json(); // 응답을 JSON으로 파싱
-            })
-            .then((data) => {
-              if (data.error) {
-                console.error("서버 에러:", data.error);
-                throw new Error(data.message);
-              }
-              const navList = document.getElementById("nav-list");
-              navList.innerHTML = `<li><a href="/users">Profile</a></li>`;
-            })
-            .catch((error) => {
-              console.error("Catch block error:", error);
-              localStorage.clear();
-              alert(`다시 로그인 해주시길 바랍니다. ${error.message}`);
-              window.location.href = "/"; // 에러 발생 시 로그인 페이지로 리다이렉트
-            });
-        }
-      });
-    </script>
     <header>
       <h1>PR | Proud Resumes</h1>
       <nav>
@@ -57,4 +23,16 @@
       </main>
     </div>
   </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      //로컬스토리지에 유저아이디 여부 확인
+      const userId = localStorage.getItem("userId");
+      // 로컬스토리지에 유저아이디가 있다면 로그인 상태 -> nav에 프로필탭 띄우기
+      if (userId) {
+        const navList = document.getElementById("nav-list");
+        navList.innerHTML = `<li><a href="/users">Profile</a></li>`;
+      }
+    });
+  </script>
+  <script src="../components/activity-timeout-logout.js"></script>
 </html>
