@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true })); // URL-encoded 본문 파싱
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "../public")));
+app.use("/components", express.static("src/components"));
 
 app.get("/", (req, res) => {
   return res.render("index");
@@ -34,6 +35,11 @@ app.get("/users", (req, res) => {
   res.render("profile"); // 'profile.ejs'를 렌더링
 });
 
+app.use("/token", loginRequired, (req, res) => {
+  if (req.userId) {
+    res.status(200).json({ success: true, message: "토큰 정상" });
+  }
+});
 app.use("/auth", authRouter);
 app.use("/users", loginRequired, userRouter);
 app.use("/resumes", loginRequired, resumeRouter);
