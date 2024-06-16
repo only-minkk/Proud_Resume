@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 로그인 상태라면 타이머 실행.
   if (accessToken) {
-    const timeoutTime = 6000;
+    // 30분
+    const timeoutTime = 1800000;
     var timeout;
     function resetTimer() {
       clearTimeout(timeout);
