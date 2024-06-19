@@ -25,7 +25,7 @@ export const createUser = async (req, res) => {
     // 유저 객체 저장
     const savedUser = await newUser.save();
 
-    // 저장된 유저 정보 반환
+    // 회원가입 성공 시 성공 메시지 반환
     res.status(201).json({ success: true, message: "회원가입 성공" });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
