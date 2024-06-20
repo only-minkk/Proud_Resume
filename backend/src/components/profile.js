@@ -1,20 +1,3 @@
-// document.addEventListener("click", function (event) {
-//   // 이벤트 타겟이 취소 버튼인지 확인
-//   if (
-//     event.target.matches('button[type="button"]') &&
-//     event.target.textContent === "취소"
-//   ) {
-//     cancelButton(event);
-//     // } else if (
-//     //   event.target.matches('button[type="button"]') &&
-//     //   event.target.textContent === "수정"
-//     // ) {
-//     //   console.log("111Event target:", event.target);
-//     //   console.log("111Event currentTarget:", event.currentTarget);
-//     //   // createUpdateForm(event);
-//   }
-// });
-
 // 개인정보 수정 (개인정보 수정 버튼 클릭)
 function updateProfile(event) {
   event.preventDefault();
@@ -122,59 +105,79 @@ function createUpdateForm(event) {
   const currentPasswordInput = document.getElementById("currentPassword");
   const passwordInput = document.getElementById("password");
   const confirmPasswordInput = document.getElementById("confirmPassword");
-  const updateFormInput = document.getElementById("updateForm");
   const submitButton = document.getElementById("submitButton");
-  nameInput.addEventListener("input", function () {
-    if (!nameInput.value) {
-      nameError.textContent = "이름을 입력해 주세요.";
-    } else {
-      nameError.textContent = "";
-    }
-  });
 
-  currentPasswordInput.addEventListener("input", function () {
-    if (!currentPasswordInput.value) {
-      currentPasswordError.textContent = "비밀번호를 입력해 주세요.";
-    } else {
-      currentPasswordError.textContent = "";
-    }
-  });
-
-  passwordInput.addEventListener("input", function () {
-    if (!passwordInput.value) {
-      passwordError.textContent = "비밀번호를 입력해 주세요.";
-    } else {
-      passwordError.textContent = "";
-    }
-  });
-
-  // 새롭게 입력한 비밀번호 검증용 입력 이벤트 리스너를 추가
-  confirmPasswordInput.addEventListener("input", function () {
-    // 비밀번호와 비밀번호 확인이 일치하는지 검사
-    if (!confirmPasswordInput.value) {
-      confirmPasswordError.textContent = "비밀번호를 입력해 주세요.";
-    } else if (passwordInput.value !== confirmPasswordInput.value) {
-      // 일치하지 않으면 사용자에게 경고를 표시
-      confirmPasswordError.textContent = "비밀번호가 일치하지 않습니다.";
-    } else {
-      // 문제가 없으면 경고를 제거
-      confirmPasswordError.textContent = "";
-    }
-  });
-
-  updateFormInput.addEventListener("input", function () {
-    if (
-      [
-        nameError.textContent,
-        currentPasswordError.textContent,
-        passwordError.textContent,
-        confirmPasswordError.textContent,
-      ].every((value) => value === "")
-    ) {
-      submitButton.style.display = "inline";
-    } else {
+  // 입력 검증 함수
+  function validateInput(input, errorDiv, errorMessage) {
+    if (!input.value) {
+      errorDiv.textContent = errorMessage;
       submitButton.style.display = "none";
+    } else {
+      errorDiv.textContent = "";
     }
+
+    // 새 비밀번호 확인 입력 검증
+    if (input === confirmPasswordInput) {
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        errorDiv.textContent =
+          "새 비밀번호와 일치하지 않습니다. 다시 확인해 주세요.";
+      } else {
+        passwordError.textContent = "";
+        errorDiv.textContent = "";
+      }
+    }
+
+    // 새 비밀번호 입력 검증
+    if (input === passwordInput) {
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordError.textContent =
+          "새 비밀번호와 일치하지 않습니다. 다시 확인해 주세요.";
+      } else {
+        errorDiv.textContent = "";
+        confirmPasswordError.textContent = "";
+      }
+    }
+    checkAllValid(); // 모든 입력이 유효한지 확인하는 함수를 호출
+  }
+
+  // 모든 입력이 유효한지 확인
+  function checkAllValid() {
+    // 모든 에러 메시지가 비어 있는지 확인하고, 비밀번호가 일치하는지 검사
+    const errors = [
+      nameError,
+      currentPasswordError,
+      passwordError,
+      confirmPasswordError,
+    ].map((e) => e.textContent);
+    if (
+      errors.every((e) => e === "") &&
+      passwordInput.value === confirmPasswordInput.value
+    ) {
+      submitButton.style.display = "inline"; // 모든 조건이 충족되면 버튼을 보이게 함
+    } else {
+      submitButton.style.display = "none"; // 하나라도 충족되지 않으면 버튼을 숨김
+    }
+  }
+  // 이벤트 리스너 추가
+  nameInput.addEventListener("input", () =>
+    validateInput(nameInput, nameError, "이름을 입력해 주세요.")
+  );
+  currentPasswordInput.addEventListener("input", () =>
+    validateInput(
+      currentPasswordInput,
+      currentPasswordError,
+      "현재 비밀번호를 입력해 주세요."
+    )
+  );
+  passwordInput.addEventListener("input", () =>
+    validateInput(passwordInput, passwordError, "새 비밀번호를 입력해 주세요.")
+  );
+  confirmPasswordInput.addEventListener("input", function () {
+    validateInput(
+      confirmPasswordInput,
+      confirmPasswordError,
+      "새 비밀번호 확인을 입력해 주세요."
+    );
   });
 }
 
