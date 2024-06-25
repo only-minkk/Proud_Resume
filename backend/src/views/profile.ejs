@@ -54,6 +54,18 @@
         font-size: 0.8em;
         height: 20px;
       }
+      #resumeContents {
+        cursor: pointer;
+      }
+      #resumeContents:hover {
+        transition: 0.3s;
+        border: 6px solid #ffffff;
+        font-weight: bolder;
+        background-color: #61dafb; /* 호버 시 색상 변경 */
+        color: #ffffff;
+        transform: scale(1.05); /* 호버 시 약간 확대 */
+        font-size: 110%; /* 호버 시 글자 크기 10% 증가 */
+      }
     </style>
     <header>
       <h1>PR | Proud Resumes</h1>
@@ -71,7 +83,7 @@
         <nav>
           <ul>
             <section class="button" id="createResume">이력서 생성</section>
-            <section class="button" id="getResume">이력서 목록</section>
+            <section class="button" id="getResumes">이력서 목록</section>
             <section class="button" id="getUsers">개인정보</section>
           </ul>
         </nav>
@@ -79,5 +91,6 @@
     </div>
   </body>
   <script src="../components/activity-timeout-logout.js"></script>
+  <script src="../components/resumeLoad.js"></script>
   <script src="../components/profile.js"></script>
 </html>
