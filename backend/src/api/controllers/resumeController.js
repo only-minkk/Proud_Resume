@@ -1,19 +1,30 @@
 import Resume from "../models/resumeModel.js";
 
+//  이력서 작성
 export const createResume = async (req, res) => {
   try {
-    const userId = req.userId;
-    const { resume, isPublic } = req.body;
+    if (!req.body.title) {
+      const today = new Date();
+      const year = String(today.getFullYear()).substring(2); // 두 자리 연도
+      const month = String(today.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+      const day = String(today.getDate()).padStart(2, "0");
+      const currentDate = `${year}${month}${day}`;
+      req.body.title = currentDate;
+    }
 
+    // 이력서 객체 생성
     const newResume = new Resume({
-      userId,
-      resume,
-      isPublic,
+      userId: req.userId,
+      title: req.body.title,
+      resume: req.body.resume,
+      isPublic: req.body.isPublic,
     });
 
+    // 이력서 객체 저장
     const savedResume = await newResume.save();
     res.status(201).json(savedResume);
   } catch (error) {
+    console.log(error);
     res.status(400).json({ message: error.message });
   }
 };

@@ -6,6 +6,10 @@ const resumeSchema = new Schema(
       type: String,
       required: true,
     },
+    title: {
+      type: String,
+      required: true,
+    },
     resume: {
       type: Schema.Types.Mixed,
     },
