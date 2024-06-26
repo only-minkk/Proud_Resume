@@ -249,28 +249,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location = "/";
   }
 
-  // 로그아웃 버튼
-  const logoutButton = document.getElementById("logout");
-
-  // 로그아웃 이벤트 리스너
-  logoutButton.addEventListener("click", function (event) {
-    // 기본 동작 방지
-    event.preventDefault();
-    // 로컬 스토리지 비우기
-    localStorage.clear();
-    alert("로그아웃하였습니다.");
-
-    // fetch("/logout", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    window.location = "/";
-    return;
-  });
-
   // 개인정보 보기 (개인정보 섹션 클릭)
   document.getElementById("getUsers").addEventListener("click", function () {
     // 개인정보를 보여줄 섹션

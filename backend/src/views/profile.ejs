@@ -93,4 +93,29 @@
   <script src="../components/activity-timeout-logout.js"></script>
   <script src="../components/resumeLoad.js"></script>
   <script src="../components/profile.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 로그아웃 버튼
+      const logoutButton = document.getElementById("logout");
+
+      // 로그아웃 이벤트 리스너
+      logoutButton.addEventListener("click", function (event) {
+        // 기본 동작 방지
+        event.preventDefault();
+        // 로컬 스토리지 비우기
+        localStorage.clear();
+        alert("로그아웃하였습니다.");
+
+        // fetch("/logout", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        // });
+
+        window.location = "/";
+        return;
+      });
+    });
+  </script>
 </html>
