@@ -1,53 +1,52 @@
-function resumeDetail() {
-  console.log("ddd");
-}
-
-document.addEventListener("DOMContentLoaded", function (event) {
+document.addEventListener("DOMContentLoaded", () => {
   // 이력서 목록 (이력서 목록 섹션 클릭)
-  document.getElementById("getResumes").addEventListener("click", function () {
-    const resumeContents = document.getElementById("resumeContents");
+  document.getElementById("getResumes").addEventListener("click", async () => {
+    try {
+      // 이미 생성된 이력서 목록(섹션)이 있는지 확인
+      const resumeContents = document.querySelectorAll("#resumeContents");
 
-    if (resumeContents?.style.display === "block") {
-      const resumeContents = document.querySelectorAll("#resumeContents");
-      resumeContents.forEach((i) => {
-        i.style.display = "none";
-      });
-      return;
-    } else if (resumeContents?.style.display === "none") {
-      const resumeContents = document.querySelectorAll("#resumeContents");
-      resumeContents.forEach((i) => {
-        i.style.display = "block";
-      });
-      return;
-    } else {
-      fetch(`resumes/${localStorage.userId}`, {
+      // 이미 생성된 섹션이 있다면 display 속성을 토글(숨기기/보이기)
+      if (resumeContents.length > 0) {
+        resumeContents.forEach((element) => {
+          const displayStyle = window.getComputedStyle(element).display;
+          element.style.display = displayStyle === "block" ? "none" : "block";
+        });
+        return;
+      }
+
+      // 섹션이 없다면 서버에 요청
+      const response = await fetch(`resumes/${localStorage.userId}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage.accessToken}`,
         },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // 이력서 섹션 생성? 아니면 이력서 제목들만 목록 나열하고 클릭하면 이력서 edit 창이나 이력서 화면으로 넘길까?
+      });
 
-          data.map((resume) => {
-            const resumeWindow = document.createElement("section");
-            // resumeWindow.onclick = resumeDetail();
-            resumeWindow.className = "contents";
-            resumeWindow.id = "resumeContents";
-            resumeWindow.innerHTML = `
-              <a>${resume.title}</a>
-            `;
-            resumeWindow.style.display = "block";
-            document
-              .getElementById("getResumes")
-              .insertAdjacentElement("afterend", resumeWindow);
-          });
-        })
-        .catch((error) => {
-          console.error("Error : ", error);
-          alert(`Error : ${error.message}`);
-        });
+      // 응답이 성공적이지 않다면 응답받은 json을 에러 처리
+      if (!response.ok) {
+        const error = await response.json();
+        throw error;
+      }
+
+      // 응답받은 json 데이터 파싱
+      const data = await response.json();
+
+      // 응답받은 데이터를 순회하며 새로운 섹션 생성, 삽입
+      data.forEach((resume) => {
+        const resumeWindow = document.createElement("section");
+        resumeWindow.className = "contents";
+        resumeWindow.id = "resumeContents";
+        resumeWindow.innerHTML = `
+            <a>${resume.title}</a>
+          `;
+
+        document
+          .getElementById("getResumes")
+          .insertAdjacentElement("afterend", resumeWindow);
+      });
+    } catch (error) {
+      alert(error.message);
+      window.location.href = "/users";
     }
   });
 });
