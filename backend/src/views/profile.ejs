@@ -99,22 +99,43 @@
       const logoutButton = document.getElementById("logout");
 
       // 로그아웃 이벤트 리스너
-      logoutButton.addEventListener("click", function (event) {
-        // 기본 동작 방지
-        event.preventDefault();
-        // 로컬 스토리지 비우기
-        localStorage.clear();
-        alert("로그아웃하였습니다.");
+      logoutButton.addEventListener("click", async (event) => {
+        try {
+          // 기본 동작 방지
+          event.preventDefault();
+          // // 로컬 스토리지 비우기
+          // localStorage.clear();
+          // alert("로그아웃하였습니다.");
 
-        // fetch("/logout", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        // });
+          const response = await fetch(`/users/${localStorage.userId}/logout`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.accessToken}`,
+            },
+          });
 
-        window.location = "/";
-        return;
+          if (response.ok) {
+            console.log("ok");
+            // 로컬 스토리지 비우기
+            localStorage.clear();
+            alert("로그아웃하였습니다.");
+            window.location = "/";
+            return;
+          } else {
+            console.log("not ok");
+            const error = await response.json();
+            throw error;
+          }
+
+          // const data = await response.json();
+
+          // window.location = "/";
+          // return;
+        } catch (error) {
+          alert(error.message);
+          window.location.href = "/users";
+        }
       });
     });
   </script>
