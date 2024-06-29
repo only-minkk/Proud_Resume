@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import redisClient from "../../../config/redis.js";
 
 // 개인정보 조회
 export const getUsers = async (req, res) => {
@@ -60,6 +61,22 @@ export const updateUser = async (req, res) => {
     // 수정 완료 응답 반환
     console.log("수정완료", updatedUser);
     res.status(200).json({ success: true, message: "업데이트 성공" });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+// 로그아웃
+export const logoutUser = async (req, res) => {
+  try {
+    // 레디스 클라이언트에 userId를 키 값으로 하여 token 필드에 토큰값 저장.
+    await redisClient.hSet(`${req.userId}`, "token", req.userToken);
+    await redisClient.hGetAll(`${req.userId}`, (err, obj) => {
+      console.log(obj);
+    });
+
+    // 로그아웃 완료 응답 반환
+    res.status(200).json({ success: true, message: "로그아웃 성공" });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
