@@ -51,6 +51,15 @@ export const getResumes = async (req, res) => {
   }
 };
 
+export const getResumeDetail = async (req, res) => {
+  try {
+    const resume = await Resume.find({ _id: req.params.resumeId });
+    res.status(201).json(resume);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 export const updateResume = async (req, res) => {
   try {
     const userId = req.userId;
