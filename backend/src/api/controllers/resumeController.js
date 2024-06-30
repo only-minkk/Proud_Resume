@@ -31,8 +31,11 @@ export const createResume = async (req, res) => {
 
 export const getUsersResumes = async (req, res) => {
   try {
-    const userId = req.userId;
-    const usersResumes = await Resume.find({ userId: userId });
+    const usersResumes = await Resume.find(
+      { userId: req.userId },
+      { _id: 1, title: 1 }
+    );
+
     res.status(201).json(usersResumes);
   } catch (error) {
     res.status(400).json({ message: error.message });
