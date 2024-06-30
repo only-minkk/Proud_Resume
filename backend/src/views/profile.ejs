@@ -116,15 +116,20 @@
           });
 
           if (response.ok) {
-            console.log("ok");
             // 로컬 스토리지 비우기
             localStorage.clear();
             alert("로그아웃하였습니다.");
             window.location = "/";
             return;
           } else {
-            console.log("not ok");
             const error = await response.json();
+            if (error.message.includes("세션이 만료되었습니다.")) {
+              // 로컬 스토리지 비우기
+              localStorage.clear();
+              alert("로그아웃하였습니다.");
+              window.location = "/";
+              return;
+            }
             throw error;
           }
 
