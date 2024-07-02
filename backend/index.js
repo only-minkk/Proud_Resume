@@ -7,7 +7,7 @@ dotenv.config();
 
 const PORT = process.env.SEVER_PORT || 5005;
 
-connectDB();
+await connectDB();
 await redisClient.connect();
 
 app.listen(PORT, () => {
