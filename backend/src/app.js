@@ -6,6 +6,7 @@ import loginRequired from "../middleware/loginRequired.js";
 import userRouter from "./api/routes/userRoutes.js";
 import resumeRouter from "./api/routes/resumeRoutes.js";
 import feedbackRouter from "./api/routes/feedbackRoutes.js";
+import { getResumeDetail } from "./api/controllers/resumeController.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,8 @@ app.get("/register", (req, res) => {
 app.get("/users", (req, res) => {
   res.render("profile"); // 'profile.ejs'를 렌더링
 });
+
+app.get("/resumes/:userId/:resumeId", getResumeDetail); // 'resumeDetail.ejs'를 렌더링
 
 app.use("/token", loginRequired, (req, res) => {
   if (req.userId) {

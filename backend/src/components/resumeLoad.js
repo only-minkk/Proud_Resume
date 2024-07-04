@@ -1,4 +1,41 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // const resumeLoad = async (resumeId) => {
+  //   try {
+  //     // const response = await fetch(
+  //     //   `resumes/${localStorage.userId}/${resumeId}`,
+  //     //   {
+  //     //     method: "GET",
+  //     //     headers: {
+  //     //       Authorization: `Bearer ${localStorage.accessToken}`,
+  //     //     },
+  //     //   }
+  //     // );
+  //     // if (!response.ok) {
+  //     //   const error = await response.json();
+  //     //   throw error;
+  //     // }
+  //     // const responseData = await response.json();
+  //     // const resumeDetailPage = window.open("/resumeDetail", "_blank");
+  //     // // 페이지가 로드된 후 데이터를 전달
+  //     // resumeDetailPage.onload = () => {
+  //     //   resumeDetailPage.postMessage(responseData, window.location.origin);
+  //     // };
+  //     // console.log(responseData);
+  //     // const resumeDetailPage = window.open(
+  //     //   "/resumeDetail",
+  //     //   "_blank",
+  //     //   "width=600,height=400"
+  //     // );
+  //     // resumeDetailPage.document.write(responseData);
+  //     // resumeDetailPage.close();
+  //     // const data = await response.json();
+  //     // console.log(data);
+  //   } catch (error) {
+  //     alert(error.message);
+  //     window.location.href = "/users";
+  //   }
+  // };
+
   // 이력서 목록 (이력서 목록 섹션 클릭)
   document.getElementById("getResumes").addEventListener("click", async () => {
     try {
@@ -37,12 +74,18 @@ document.addEventListener("DOMContentLoaded", () => {
         resumeWindow.className = "contents";
         resumeWindow.id = "resumeContents";
         resumeWindow.innerHTML = `
-            <a>${resume.title}</a>
+            <a id="resumeTitle">${resume.title}</a>
+            <a id="resumeId" style="display:none;">${resume._id}</a>
           `;
-
         document
           .getElementById("getResumes")
           .insertAdjacentElement("afterend", resumeWindow);
+        resumeWindow.addEventListener("click", (event) => {
+          window.location.href = `/resumes/${localStorage.userId}/${
+            event.target.querySelector("#resumeId").textContent
+          }`;
+          // resumeLoad(event.target.querySelector("#resumeId").textContent);
+        });
       });
     } catch (error) {
       alert(error.message);

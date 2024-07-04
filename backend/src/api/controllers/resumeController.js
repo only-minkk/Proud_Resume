@@ -54,7 +54,7 @@ export const getResumes = async (req, res) => {
 export const getResumeDetail = async (req, res) => {
   try {
     const resume = await Resume.find({ _id: req.params.resumeId });
-    res.status(201).json(resume);
+    res.status(201).render("resumeDetail", { data: resume });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

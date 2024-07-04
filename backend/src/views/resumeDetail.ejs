@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proud Resumes</title>
+    <link rel="stylesheet" href="/styles/main.css" />
+    <style>
+      .container {
+        width: 1000px;
+      }
+      input {
+        display: block;
+      }
+      #profileDiv input {
+        background-color: rgba(255, 255, 255, 0);
+        border: 1px solid rgba(0, 0, 0, 0);
+        height: 25px;
+        font-size: 20px;
+        font-weight: 500;
+      }
+      hr {
+        border: none;
+        height: 1px;
+        background-color: #20232a;
+        margin-bottom: 50px;
+      }
+      .auto-height-textarea {
+        width: 100%;
+        font-size: 20px;
+        font-weight: 500;
+        background-color: rgba(255, 255, 255, 0);
+        border: 1px solid rgba(0, 0, 0, 0);
+        resize: none; /* 사용자가 크기를 조절하지 못하게 함 */
+        overflow-y: hidden; /* 세로 스크롤바를 숨김 */
+      }
+      .careerContainer,
+      .educationContainer {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .careerType,
+      .educationType {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .periodContainer {
+        width: fit-content;
+        padding: 20px 0;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .periodContainer input {
+        font-size: 20px;
+        width: 100px;
+        height: fit-content;
+        display: flex;
+        background-color: rgba(255, 255, 255, 0);
+        border: 1px solid rgba(0, 0, 0, 0);
+        text-align: center;
+      }
+      .leftColumn {
+        width: 10%;
+        padding-top: 18px;
+        font-size: 25px;
+        font-weight: bolder;
+      }
+      .rightColumn {
+        width: 90%;
+      }
+      button {
+        cursor: pointer; /* 손가락 모양 커서 적용 */
+      }
+      button:hover {
+        transition: 0.3s;
+        font-weight: bolder;
+        background-color: #61dafb; /* 호버 시 색상 변경 */
+        color: #ffffff;
+      }
+      #buttonDiv {
+        align-content: center;
+        margin: 20px auto; /* 가운데 정렬을 위한 마진 */
+        text-align: center;
+      }
+    </style>
+    <header>
+      <h1>PR | Proud Resumes</h1>
+      <nav>
+        <ul id="nav-list">
+          <li><a href="/">home</a></li>
+          <li><a id="logout">logout</a></li>
+        </ul>
+      </nav>
+    </header>
+  </head>
+  <body>
+    <div class="container">
+      <main
+        style="
+          background-color: rgba(255, 255, 255, 0.555);
+          border-radius: 100px;
+        "
+      >
+        <!-- 제목 영역 -->
+        <div id="titleDiv">
+          <input
+            type="text"
+            style="
+              font-weight: bold;
+              background-color: rgba(255, 255, 255, 0);
+              border: 1px solid rgba(0, 0, 0, 0);
+              margin: 30px 0px;
+              height: 50px;
+              font-size: 50px;
+              font-weight: 1000;
+            "
+            maxlength="10"
+            placeholder="이력서 제목(필수)"
+            name="title"
+            value="<%= data[0].title %>"
+          />
+        </div>
+        <hr />
+        <!-- 기본 정보 영역 -->
+        <div id="profileDiv">
+          <input
+            type="text"
+            maxlength="10"
+            placeholder="이름(필수)"
+            name="name"
+            value="👤 <%= data[0].resume['name'] %>"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="email"
+            value="📧 <%= data[0].resume['email'] || '' %>"
+          />
+          <input
+            type="tel"
+            name="tel"
+            placeholder="tel"
+            value="📞 <%= data[0].resume['tel'] || '' %>"
+          />
+          <textarea
+            id="introduceTextarea"
+            class="auto-height-textarea"
+            style="margin-top: 30px"
+            name="introduce"
+            placeholder="자기소개"
+          >
+<%= data[0].resume['introduce'] || '' %> </textarea
+          >
+        </div>
+        <hr />
+
+        <!-- 이력 영역 -->
+        <div class="careerContainer">
+          <div class="leftColumn">경력</div>
+          <div class="rightColumn">
+            <ul>
+              <%const career = data[0].resume['career'] || [{}]%> <%
+              career.forEach((obj) => { %>
+              <li style="margin-bottom: 40px">
+                <div class="careerType">
+                  <div>
+                    <input
+                      type="text"
+                      style="
+                        width: fit-content;
+                        background-color: rgba(255, 255, 255, 0);
+                        border: 1px solid rgba(0, 0, 0, 0);
+                        font-size: 30px;
+                        font-weight: bolder;
+                      "
+                      name="company"
+                      placeholder="회사명"
+                      value="<%= obj['company'] %>"
+                    />
+                    <input
+                      type="text"
+                      style="
+                        width: fit-content;
+                        background-color: rgba(255, 255, 255, 0);
+                        border: 1px solid rgba(0, 0, 0, 0);
+                        margin-left: 15px;
+                        font-size: 20px;
+                        font-weight: bolder;
+                      "
+                      name="position"
+                      placeholder="부서명/직책"
+                      value="<%= obj['position'] %>"
+                    />
+                  </div>
+                  <div class="periodContainer">
+                    <input
+                      type="text"
+                      name="startDate"
+                      placeholder="(시작일)"
+                      value="<%= obj['startDate'] %>"
+                    />
+                    <span style="margin: 0 20px 12px 20px; font-size: 20px"
+                      >-</span
+                    >
+                    <input
+                      type="text"
+                      name="endDate"
+                      placeholder="(종료일)"
+                      value="<%= obj['endDate'] %>"
+                    />
+                  </div>
+                </div>
+                <textarea
+                  id="achievementsTextarea"
+                  class="auto-height-textarea"
+                  style="margin-top: 30px; font-weight: bolder"
+                  type="text"
+                  name="achievements"
+                  placeholder="주요성과"
+                >
+<%= obj['achievements'] || '' %></textarea
+                >
+                <hr />
+              </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        <!-- 학력 영역 -->
+        <div class="educationContainer">
+          <div class="leftColumn">학력</div>
+          <div class="rightColumn">
+            <ul>
+              <% const education = data[0].resume['education'] || [{}]; %> <%
+              education.forEach((obj) => { %>
+              <li style="margin-bottom: 40px">
+                <div class="educationType">
+                  <div>
+                    <input
+                      type="text"
+                      style="
+                        width: fit-content;
+                        background-color: rgba(255, 255, 255, 0);
+                        border: 1px solid rgba(0, 0, 0, 0);
+                        font-size: 30px;
+                        font-weight: bolder;
+                      "
+                      name="school"
+                      placeholder="학교명"
+                      value="<%= obj['school'] || ''  %>"
+                    />
+                    <input
+                      type="text"
+                      style="
+                        width: fit-content;
+                        background-color: rgba(255, 255, 255, 0);
+                        border: 1px solid rgba(0, 0, 0, 0);
+                        margin-left: 15px;
+                        font-size: 20px;
+                        font-weight: bolder;
+                      "
+                      name="majorAndDegrees"
+                      placeholder="전공 및 학위"
+                      value="<%= obj['majorAndDegrees'] %>"
+                    />
+                  </div>
+                  <div class="periodContainer">
+                    <input
+                      type="text"
+                      name="startDate"
+                      placeholder="(시작일)"
+                      value="<%= obj['startDate'] %>"
+                    />
+                    <span style="margin: 0 20px 12px 20px; font-size: 20px"
+                      >-</span
+                    >
+                    <input
+                      type="text"
+                      name="endDate"
+                      placeholder="(종료일)"
+                      value="<%= obj['endDate'] %>"
+                    />
+                  </div>
+                </div>
+                <textarea
+                  id="achievementsTextarea"
+                  class="auto-height-textarea"
+                  style="margin-top: 30px; font-weight: bolder"
+                  type="text"
+                  name="CompletedCoursesAndResearch"
+                  placeholder="이수과목 및 연구내용"
+                >
+<%= obj['CompletedCoursesAndResearch'] || '' %></textarea
+                >
+                <hr />
+              </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        <div id="buttonDiv">
+          <button id="submitButton" type="submit">제출</button>
+          <button type="button" onclick="cancelButton(event)">취소</button>
+        </div>
+      </main>
+    </div>
+  </body>
+
+  <script src="../components/activity-timeout-logout.js"></script>
+  <script>
+    // 자동 높이 조절 함수
+    function adjustTextareaHeight(textarea) {
+      textarea.style.height = "auto"; // 높이를 초기화하여 텍스트를 모두 표시할 수 있게 함
+      textarea.style.height = textarea.scrollHeight + "px"; // 실제 텍스트의 높이로 설정
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const introduceTextarea = document.getElementById("introduceTextarea");
+      const achievementsTextarea = document.getElementById(
+        "achievementsTextarea"
+      );
+      adjustTextareaHeight(introduceTextarea); // 초기에 한 번 높이 조절
+      adjustTextareaHeight(achievementsTextarea); // 초기에 한 번 높이 조절
+
+      // 텍스트가 변경될 때마다 높이 다시 조절
+      introduceTextarea.addEventListener("input", function () {
+        adjustTextareaHeight(introduceTextarea);
+      });
+      achievementsTextarea.addEventListener("input", function () {
+        adjustTextareaHeight(achievementsTextarea);
+      });
+
+      // 로그아웃 버튼
+      const logoutButton = document.getElementById("logout");
+
+      // 로그아웃 이벤트 리스너
+      logoutButton.addEventListener("click", async (event) => {
+        try {
+          // 기본 동작 방지
+          event.preventDefault();
+
+          const response = await fetch(`/users/${localStorage.userId}/logout`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.accessToken}`,
+            },
+          });
+
+          if (response.ok) {
+            // 로컬 스토리지 비우기
+            localStorage.clear();
+            alert("로그아웃하였습니다.");
+            window.location = "/";
+            return;
+          } else {
+            const error = await response.json();
+            if (error.message.includes("세션이 만료되었습니다.")) {
+              // 로컬 스토리지 비우기
+              localStorage.clear();
+              alert("로그아웃하였습니다.");
+              window.location = "/";
+              return;
+            }
+            throw error;
+          }
+        } catch (error) {
+          alert(error.message);
+          window.location.href = "/users";
+        }
+      });
+    });
+  </script>
+</html>
